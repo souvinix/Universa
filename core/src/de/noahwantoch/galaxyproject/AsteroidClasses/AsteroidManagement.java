@@ -1,9 +1,12 @@
 package de.noahwantoch.galaxyproject.AsteroidClasses;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
+import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 
 public class AsteroidManagement {
 
@@ -12,9 +15,9 @@ public class AsteroidManagement {
     //Important variables! =>
     private static final float VELOCITY = 15;
     private static final int MAX_ASTEROIDS = 5;
-    private static final String[] PATHS = {"asteroid.png", "asteroid2.png"};
+    private static final String[] PATHS = {"asteroid.png"/*, "asteroid2.png"*/};
 
-    private ArrayList<Asteroid> asteroids;
+    private static ArrayList<Asteroid> asteroids;
     private boolean isStarted = false;
 
     public AsteroidManagement() {
@@ -38,6 +41,7 @@ public class AsteroidManagement {
         if(isStarted){
 
             for(Asteroid asteroid : asteroids){
+
                 asteroid.getSprite().draw(Batch.getBatch());
 
                 asteroid.setY(asteroid.getY() - VELOCITY);
@@ -68,6 +72,10 @@ public class AsteroidManagement {
         for(Asteroid asteroid : asteroids){
             asteroid.dispose();
         }
+    }
+
+    public static ArrayList<Asteroid> getAsteroids(){
+        return asteroids;
     }
 
 }

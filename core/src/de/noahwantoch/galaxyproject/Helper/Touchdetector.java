@@ -18,6 +18,8 @@ public class Touchdetector {
         if (Gdx.input.isTouched()) {
             position.set(Gdx.input.getX(), CurrentSystem.getScreenHeight() - Gdx.input.getY(), 0);
             isTouched = true;
+        }else if(Gdx.input.isTouched(1) || Gdx.input.isTouched(2)){
+            isTouched = false;
         }else{
             isTouched = false;
         }

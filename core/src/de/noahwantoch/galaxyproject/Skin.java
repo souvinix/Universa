@@ -12,6 +12,9 @@ public class Skin {
 
     private static final String TAG = Skin.class.getSimpleName();
 
+    private static final int TILE_WIDTH = 189; //How big is the size of 1/4 Spritesheet
+    private static final int TILE_HEIGHT = 294;
+
     private int valueOfSkins = ALL_SKIN_PATHS.length;
 
     private String path;
@@ -45,13 +48,10 @@ public class Skin {
             this.sprite = new Sprite(texture);
 
         }catch(Exception e){
-
-            Gdx.app.debug(TAG, "Exception");
             e.printStackTrace();
-
         }
 
-        TextureRegion[][] tempFrames = TextureRegion.split(this.getSpriteSheet(), 189, 294);
+        TextureRegion[][] tempFrames = TextureRegion.split(this.getSpriteSheet(), TILE_WIDTH, TILE_HEIGHT);
         animationFrames = new TextureRegion[4];
 
         int index = 0;

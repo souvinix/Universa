@@ -18,6 +18,7 @@ public class Controller {
     private static final float PRESSED_ADDITION = 25; //If you press the Button, size addition
     private static final int CONTROLLER_HITBOX = 10; //0 is default //The Button (invisible) gets bigger
     private static final float VELOCITY = 15f; //How much units, should the spaceship slide to right/left
+    private static final int ROTATION_VALUE = 15;
 
     // Path's of the Buttons ->
     private static final String LEFT_BUTTON_PATH = "links_button.png";
@@ -60,7 +61,7 @@ public class Controller {
 
     //Will be called every time when a new frame begins //every frame
     public void renderController(float delta){
-        player.renderPlayer();
+        player.renderPlayer(delta);
 
         Batch.getBatch().begin();
 
@@ -78,12 +79,18 @@ public class Controller {
             Batch.getBatch().draw(leftSprite, leftSprite.getX(), heightOfController, leftSprite.getWidth() + PRESSED_ADDITION, leftSprite.getHeight() + PRESSED_ADDITION);
             //Actually function of the left Button =>
             this.toLeft();
+            player.setCurrentRotation(ROTATION_VALUE);
 
         }
         if(touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
             Batch.getBatch().draw(rightSprite, rightSprite.getX(), heightOfController, rightSprite.getWidth() + PRESSED_ADDITION, rightSprite.getHeight() + PRESSED_ADDITION);
             //Actually function of the right Button =>
             this.toRight();
+            player.setCurrentRotation(-ROTATION_VALUE);
+        }
+
+        if(!Gdx.input.isTouched()){
+            player.setCurrentRotation(0);
         }
 
         Batch.getBatch().end();

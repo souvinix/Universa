@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.Random;
 
+import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+
 public class Asteroid{
 
     private static final String TAG = Asteroid.class.getSimpleName();
@@ -24,6 +26,12 @@ public class Asteroid{
     private int rotationBeginning;
     private int currentRotationDegree;
 
+    //Min and max size -->
+    private float minWidth;
+    private float maxWidth;
+    private float minHeight;
+    private float maxHeight;
+
     public Asteroid(String[] path, int maxAsteroids){
         this.maxAsteroids = maxAsteroids;
         generator = new Random();
@@ -33,9 +41,13 @@ public class Asteroid{
 
         rotationBeginning = generator.nextInt(360);
         this.getSprite().setRotation(rotationBeginning);
-        this.getSprite().setOrigin(this.getSprite().getWidth() / 2, this.getSprite().getHeight() / 2);
 
         currentRotationDegree = rotationBeginning;
+
+        minWidth = Gdx.graphics.getDensity() * sprite.getWidth() / 4f;
+        maxWidth = minWidth * 1.5f;
+        minHeight = Gdx.graphics.getDensity() * sprite.getHeight() / 4f;
+        maxHeight = minHeight * 1.5f;
     }
 
     public void dispose(){
@@ -61,8 +73,9 @@ public class Asteroid{
 
     public void generateNewPosition(){
         float y = Gdx.graphics.getHeight() + (Gdx.graphics.getHeight() * (1f / maxAsteroids) * id);
-//        Gdx.app.debug(TAG, "max: " + maxAsteroidsOnScreen + " id: " + id);
-//        Gdx.app.debug(TAG, Float.toString(Gdx.graphics.getHeight()) + " + " + Float.toString((Gdx.graphics.getHeight() * (1f / maxAsteroidsOnScreen) * id)));
+
+        float randomWidth = generator.nextFloat() * (maxWidth - minWidth) + minWidth;
+        float randomHeight = generator.nextFloat() * (maxHeight - minHeight) + minHeight;
 
         sprite.setX(generator.nextInt(Gdx.graphics.getWidth() - 0) - 0);
         sprite.setY(y);
@@ -70,6 +83,9 @@ public class Asteroid{
         this.currentPath = getRandomPath();
         sprite.getTexture().dispose();
         sprite.setTexture(new Texture(currentPath));
+
+        sprite.setSize(randomWidth, randomHeight);
+        sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
     }
 
     public int getId(){
@@ -116,6 +132,13 @@ public class Asteroid{
         }
         currentRotationDegree++;
         this.getSprite().setRotation(currentRotationDegree);
+    }
+
+    public float getWidth(){
+        return this.getSprite().getWidth();
+    }
+    public float getHeight(){
+        return this.getSprite().getHeight();
     }
 
 }

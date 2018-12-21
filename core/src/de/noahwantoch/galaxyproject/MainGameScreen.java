@@ -27,8 +27,8 @@ public class MainGameScreen implements Screen {
     public void render(float delta) {
 
         background.renderBackground(delta);
-        controller.renderController(delta);
         asteroidManagement.render(delta);
+        controller.renderController(delta);
 
 
     }
