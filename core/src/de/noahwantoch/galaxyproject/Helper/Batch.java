@@ -1,4 +1,4 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.Helper;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

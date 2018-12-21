@@ -1,14 +1,9 @@
 package de.noahwantoch.galaxyproject.AsteroidClasses;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector3;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-import de.noahwantoch.galaxyproject.Batch;
+import de.noahwantoch.galaxyproject.Helper.Batch;
 
 public class AsteroidManagement {
 

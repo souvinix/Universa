@@ -3,6 +3,7 @@ package de.noahwantoch.galaxyproject;
 import com.badlogic.gdx.Screen;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
+import de.noahwantoch.galaxyproject.Helper.Batch;
 
 public class MainGameScreen implements Screen {
 

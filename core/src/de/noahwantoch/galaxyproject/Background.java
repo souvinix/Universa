@@ -1,93 +1,113 @@
 package de.noahwantoch.galaxyproject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import java.util.ArrayList;
+
+import de.noahwantoch.galaxyproject.Helper.Batch;
+import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 
 public class Background {
 
     private static final String TAG = Background.class.getSimpleName();
+    private static final String BG_PATH = "Hintergrund.png";
+    private static final String STARS_AHEAD_PATH = "sterne.png";
+    private static final String STARS_CENTER_PATH = "sterne2.png";
+    private static final String STARS_BEHIND_PATH = "sterne3.png";
 
-    private Texture bg;
-    private Texture sterne1;
-    private Texture sterne2;
-    private Texture sterne3;
+    private static final int MAX_STARS_OBJECTS = 2; //should'nt be 1 | pre-creating the stars, because then it looks timeless
+    private static final float VELOCITY = 3;
 
-    private static final int VELOCITY = 3;
+    private static Sprite bg = new Sprite(new Texture(BG_PATH));
+    private static ArrayList<Sprite> starsAhead = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
+    private static ArrayList<Sprite> starsCenter = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
+    private static ArrayList<Sprite> starsBehind = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
 
-    private static float breite = Gdx.graphics.getWidth();
-    private static float hoehe = Gdx.graphics.getHeight();
+    public Background() {
+        for (int i = 0; i < MAX_STARS_OBJECTS; i++) {
+            starsAhead.add(new Sprite(new Texture(STARS_AHEAD_PATH)));
+            starsCenter.add(new Sprite(new Texture(STARS_CENTER_PATH)));
+            starsBehind.add(new Sprite(new Texture(STARS_BEHIND_PATH)));
 
-    private float sterne1Y1 = 0;
-    private float sterne1Y2 = 0 - hoehe;
+            starsAhead.get(i).setSize(CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
+            starsCenter.get(i).setSize(CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
+            starsBehind.get(i).setSize(CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
 
-    private float sterne2Y1 = 0;
-    private float sterne2Y2 = 0 - hoehe;
+            if(i == 0){
+                starsAhead.get(i).setPosition(0, 0);
+                starsCenter.get(i).setPosition(0, 0);
+                starsBehind.get(i).setPosition(0, 0);
+            }
+            else{
+                starsAhead.get(i).setPosition(0, CurrentSystem.getScreenHeight());
+                starsCenter.get(i).setPosition(0, CurrentSystem.getScreenHeight());
+                starsBehind.get(i).setPosition(0, CurrentSystem.getScreenHeight());
+            }
 
-    private float sterne3Y1 = 0;
-    private float sterne3Y2 = 0 - hoehe;
-
-    public Background(){
-        bg = new Texture("Hintergrund.png");
-        sterne1 = new Texture("sterne.png");
-        sterne2 = new Texture("sterne2.png");
-        sterne3 = new Texture("sterne3.png");
+        }
     }
 
     public void renderBackground(float delta){
         Batch.getBatch().begin();
-        Batch.getBatch().draw(bg, 0, 0, breite, hoehe);
 
-        //Stars far away (little stars) ->
-        //--------------------------------------------
-        if(sterne3Y1 < 0 - hoehe){
-            sterne3Y1 = hoehe;
-        }
-        if(sterne3Y2 < 0 - hoehe){
-            sterne3Y2 = hoehe;
-        }
-        sterne3Y1-= VELOCITY;
-        sterne3Y2 -= VELOCITY;
+        Batch.getBatch().draw(bg, 0, 0, CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight()); //The camera zooms in
 
-        Batch.getBatch().draw(sterne3, 0 , sterne3Y1 , breite, hoehe);
-        Batch.getBatch().draw(sterne3, 0 , sterne3Y2 , breite, hoehe);
-        //--------------------------------------------
-        //Stars with the middle velocity (middle stars) ->
-        //--------------------------------------------
-        if(sterne2Y1 < 0 - hoehe){
-            sterne2Y1 = hoehe;
+        for(Sprite s : starsAhead){
+            if(s.getY() < - CurrentSystem.getScreenHeight()){
+                s.setY(CurrentSystem.getScreenHeight());
+            }else{
+                s.setY(s.getY() - VELOCITY * 3);
+            }
+            Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
-        if(sterne2Y2 < 0 - hoehe){
-            sterne2Y2 = hoehe;
-        }
-        sterne2Y1-= VELOCITY * 2;
-        sterne2Y2 -= VELOCITY * 2;
 
-        Batch.getBatch().draw(sterne2, 0 , sterne2Y1 , breite, hoehe);
-        Batch.getBatch().draw(sterne2, 0 , sterne2Y2 , breite, hoehe);
-        //--------------------------------------------
-        //foreground-stars (big stars) ->
-        //--------------------------------------------
-        if(sterne1Y1 < 0 - hoehe){
-            sterne1Y1 = hoehe;
+        for(Sprite s : starsCenter){
+            if(s.getY() < -CurrentSystem.getScreenHeight()){
+                s.setY(CurrentSystem.getScreenHeight());
+            }else{
+                s.setY(s.getY() - VELOCITY * 2);
+            }
+            Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
-        if(sterne1Y2 < 0 - hoehe){
-            sterne1Y2 = hoehe;
+
+        for(Sprite s : starsBehind){
+            if(s.getY() < -CurrentSystem.getScreenHeight()){
+                s.setY(CurrentSystem.getScreenHeight());
+            }else{
+                s.setY(s.getY() - VELOCITY);
+            }
+            Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
-        sterne1Y1-= VELOCITY * 3;
-        sterne1Y2 -= VELOCITY * 3;
-
-        Batch.getBatch().draw(sterne1, 0 , sterne1Y1 , breite, hoehe);
-        Batch.getBatch().draw(sterne1, 0 , sterne1Y2 , breite, hoehe);
-        //--------------------------------------------
-
 
         Batch.getBatch().end();
     }
 
-    public void dispose(){
-        sterne1.dispose();
-        sterne2.dispose();
-        sterne3.dispose();
-        bg.dispose();
+    public static float getBackgroundWidth() {
+        return bg.getWidth();
+    }
+
+    public static float getBackgroundHeight() {
+        return bg.getHeight();
+    }
+
+    public void dispose() {
+        for (int i = 0; i < MAX_STARS_OBJECTS; i++) {
+            starsAhead.get(i).getTexture().dispose();
+            starsCenter.get(i).getTexture().dispose();
+            starsBehind.get(i).getTexture().dispose();
+        }
+        bg.getTexture().dispose();
+    }
+
+    public ArrayList<Texture> getTextures(){ //later for AssetManager to load
+        ArrayList<Texture> textures = new ArrayList<Texture>();
+        for (int i = 0; i < MAX_STARS_OBJECTS; i++) {
+            textures.add(starsAhead.get(i).getTexture());
+            textures.add(starsCenter.get(i).getTexture());
+            textures.add(starsBehind.get(i).getTexture());
+        }
+        textures.add(bg.getTexture());
+        return textures;
     }
 }
