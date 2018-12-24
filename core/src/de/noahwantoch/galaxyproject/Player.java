@@ -1,7 +1,6 @@
 package de.noahwantoch.galaxyproject;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -15,6 +14,7 @@ public class Player {
 
     //be care -> maybe Array Index out of bounce ->
     private static Skin skin = new Skin(0);
+    private BulletHandler bulletHandler;
 
     private static final String TAG = Player.class.getSimpleName();
 
@@ -39,6 +39,7 @@ public class Player {
     private float damage;
 
     public Player(int skinID){
+        bulletHandler = new BulletHandler();
         collisiondetector = new Collisiondetector();
         progressbar = new Progressbar();
 
@@ -51,19 +52,32 @@ public class Player {
         lifes = damage * progressbar.getMaxHits(); //Full Life >> after 40(= maxhits) hits --> dead
     }
 
+    public void fire(){
+        bulletHandler.drop();
+    }
+
     public Sprite getCurrentSkin(){
         return currentSprite;
     }
 
     public void renderPlayer(float delta){
         progressbar.renderProgressbar(delta);
+        bulletHandler.renderBullets(delta);
 
         this.elapsedTime += Gdx.graphics.getDeltaTime();
 
         for(Asteroid asteroid : AsteroidManagement.getAsteroids()){
+
+            for(Bullet bullet : bulletHandler.getCurrentBullets()){
+                if(collisiondetector.checkBulletCollision(bullet, asteroid.getSprite())){
+                    //Wenn eine Bullet ein Asteroid trifft
+                    asteroid.generateNewPosition();
+                    bullet.setAsteroidCollision(true);
+                }
+            }
+
             isColided = collisiondetector.checkCollision(getCurrentSkin(), asteroid.getSprite());
             if(isColided){
-                Gdx.app.debug(TAG, "Colided!!!");
                 lifes -= damage;
                 progressbar.set(lifes);
             }
@@ -86,8 +100,8 @@ public class Player {
         return currentRotation;
     }
 
-    public Skin getSkin(){
-        return this.skin;
+    public static Skin getSkin(){
+        return skin;
     }
 
     public void dispose(){

@@ -17,7 +17,7 @@ public class Progressbar {
     private static final float DISTANCE_TO_BORDER = 0.1f; //In percentage
     private static final float PROGRESSBAR_WIDTH = CurrentSystem.getScreenWidth() - CurrentSystem.getScreenWidth() * DISTANCE_TO_BORDER;
     private static final float PROGRESSBAR_HEIGHT = CurrentSystem.getScreenHeight() * 0.02f;
-    private static final float MAX_HITS = 500f;
+    private static final float MAX_HITS = 250f;
 
     private Sprite progressbar;
     private Sprite balken;

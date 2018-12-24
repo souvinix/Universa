@@ -13,7 +13,7 @@ public class Controller {
 
     private static final String TAG = Controller.class.getSimpleName(); //For debugging
 
-    private static final float heightOfController = CurrentSystem.getScreenHeight() * 0.1f; //Y-Position
+    private static final float HEIGHT_OF_CONTROLLER = CurrentSystem.getScreenHeight() * 0.1f; //Y-Position
     private static final float SIZE_MULTIPLIER = 0.05f; //Relation //0.05f is default
     private static final float PRESSED_ADDITION = 25; //If you press the Button, size addition
     private static final int CONTROLLER_HITBOX = 10; //0 is default //The Button (invisible) gets bigger
@@ -23,10 +23,12 @@ public class Controller {
     // Path's of the Buttons ->
     private static final String LEFT_BUTTON_PATH = "links_button.png";
     private static final String RIGHT_BUTTON_PATH = "rechts_button.png";
+    private static final String FIREBUTTON_PATH = "shooting_button.png";
 
     //The Button's object's ->
     private Sprite leftSprite;
     private Sprite rightSprite;
+    private static Sprite firebutton;
 
     private Vector3 position; //The touching-Position => touch-detection (!)
 
@@ -45,16 +47,18 @@ public class Controller {
 
         leftSprite = new Sprite(new Texture(LEFT_BUTTON_PATH));
         rightSprite = new Sprite(new Texture(RIGHT_BUTTON_PATH));
+        firebutton = new Sprite(new Texture(FIREBUTTON_PATH));
 
         player = new Player(1);
 
         leftSprite.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         rightSprite.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        firebutton.setSize(BUTTON_WIDTH + BUTTON_WIDTH * 0.2f, BUTTON_HEIGHT + BUTTON_HEIGHT * 0.2f);
 
-        leftSprite.setPosition(CurrentSystem.getScreenWidth()*0.2f, heightOfController);
-        rightSprite.setPosition(CurrentSystem.getScreenWidth() - (CurrentSystem.getScreenWidth() * 0.2f) - rightSprite.getWidth(), heightOfController);
+        leftSprite.setPosition(CurrentSystem.getScreenWidth()*0.2f, HEIGHT_OF_CONTROLLER);
+        rightSprite.setPosition(CurrentSystem.getScreenWidth() - (CurrentSystem.getScreenWidth() * 0.2f) - rightSprite.getWidth(), HEIGHT_OF_CONTROLLER);
+        firebutton.setPosition(CurrentSystem.getScreenWidth() / 2 - firebutton.getWidth() / 2, HEIGHT_OF_CONTROLLER * 0.5f);
 
-        //Tests -->
         touchdetector = new Touchdetector();
 
     }
@@ -67,23 +71,30 @@ public class Controller {
 
         touchdetector.renderTouches();
 
+        if(!touchdetector.isFiring()){
+            Batch.getBatch().draw(firebutton, firebutton.getX(), firebutton.getY(), firebutton.getWidth(), firebutton.getHeight());
+        }else{
+            Batch.getBatch().draw(firebutton, firebutton.getX(), firebutton.getY(), firebutton.getWidth() + PRESSED_ADDITION, firebutton.getHeight() + PRESSED_ADDITION);
+            /*Function --> */ player.fire();
+        }
+
         if(!touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
-            Batch.getBatch().draw(leftSprite, leftSprite.getX(), heightOfController, leftSprite.getWidth(), leftSprite.getHeight());
+            Batch.getBatch().draw(leftSprite, leftSprite.getX(), HEIGHT_OF_CONTROLLER, leftSprite.getWidth(), leftSprite.getHeight());
         }
 
         if(!touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
-            Batch.getBatch().draw(rightSprite, rightSprite.getX(), heightOfController, rightSprite.getWidth(), rightSprite.getHeight());
+            Batch.getBatch().draw(rightSprite, rightSprite.getX(), HEIGHT_OF_CONTROLLER, rightSprite.getWidth(), rightSprite.getHeight());
         }
 
         if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
-            Batch.getBatch().draw(leftSprite, leftSprite.getX(), heightOfController, leftSprite.getWidth() + PRESSED_ADDITION, leftSprite.getHeight() + PRESSED_ADDITION);
+            Batch.getBatch().draw(leftSprite, leftSprite.getX(), HEIGHT_OF_CONTROLLER, leftSprite.getWidth() + PRESSED_ADDITION, leftSprite.getHeight() + PRESSED_ADDITION);
             //Actually function of the left Button =>
             this.toLeft();
             player.setCurrentRotation(ROTATION_VALUE);
 
         }
         if(touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
-            Batch.getBatch().draw(rightSprite, rightSprite.getX(), heightOfController, rightSprite.getWidth() + PRESSED_ADDITION, rightSprite.getHeight() + PRESSED_ADDITION);
+            Batch.getBatch().draw(rightSprite, rightSprite.getX(), HEIGHT_OF_CONTROLLER, rightSprite.getWidth() + PRESSED_ADDITION, rightSprite.getHeight() + PRESSED_ADDITION);
             //Actually function of the right Button =>
             this.toRight();
             player.setCurrentRotation(-ROTATION_VALUE);
@@ -113,6 +124,14 @@ public class Controller {
             player.getCurrentSkin().setX(0);
         }
 
+    }
+
+    public static Sprite getFirebutton(){
+        return firebutton;
+    }
+
+    public static float getHitbox(){
+        return CONTROLLER_HITBOX;
     }
 
     public void dispose(){
