@@ -80,10 +80,12 @@ public class Controller {
 
         if(!touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
             Batch.getBatch().draw(leftSprite, leftSprite.getX(), HEIGHT_OF_CONTROLLER, leftSprite.getWidth(), leftSprite.getHeight());
+            player.setCurrentRotation(0);
         }
 
         if(!touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
             Batch.getBatch().draw(rightSprite, rightSprite.getX(), HEIGHT_OF_CONTROLLER, rightSprite.getWidth(), rightSprite.getHeight());
+            player.setCurrentRotation(0);
         }
 
         if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
@@ -100,7 +102,7 @@ public class Controller {
             player.setCurrentRotation(-ROTATION_VALUE);
         }
 
-        if(!Gdx.input.isTouched()){
+        if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX) && touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
             player.setCurrentRotation(0);
         }
 
@@ -124,6 +126,10 @@ public class Controller {
             player.getCurrentSkin().setX(0);
         }
 
+    }
+
+    public Player getPlayer(){
+        return player;
     }
 
     public static Sprite getFirebutton(){

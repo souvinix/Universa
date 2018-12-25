@@ -19,6 +19,7 @@ public class Player {
     private static final String TAG = Player.class.getSimpleName();
 
     private static final float HEIGHT_OF_SPACESHIP = 0.2f; //In percentage
+    private static final int INTRO_VELOCITY = 4;
 
     private static final float SKIN_WIDTH = CurrentSystem.getScreenWidth() / skin.getSprite().getWidth() * 25;
     private static final float SKIN_HEIGHT = CurrentSystem.getScreenHeight() / skin.getSprite().getHeight() * 25;
@@ -33,6 +34,7 @@ public class Player {
 
     private Collisiondetector collisiondetector;
     private boolean isColided = false;
+    private boolean isIntroDone = false;
 
     private Progressbar progressbar;
     private float lifes;
@@ -46,7 +48,7 @@ public class Player {
         currentSprite = skin.getSprite();
         currentSprite.setSize(SKIN_WIDTH, SKIN_HEIGHT);
         currentSprite.setX(Gdx.graphics.getWidth() / 2 - currentSprite.getWidth() / 2);
-        currentSprite.setY(POSITION_Y);
+        currentSprite.setY(-currentSprite.getHeight());
 
         damage = progressbar.getDeltaDamage();
         lifes = damage * progressbar.getMaxHits(); //Full Life >> after 40(= maxhits) hits --> dead
@@ -61,7 +63,9 @@ public class Player {
     }
 
     public void renderPlayer(float delta){
-        progressbar.renderProgressbar(delta);
+        if(isIntroDone){
+            progressbar.renderProgressbar(delta);
+        }
         bulletHandler.renderBullets(delta);
 
         this.elapsedTime += Gdx.graphics.getDeltaTime();
@@ -90,6 +94,22 @@ public class Player {
                 currentSprite.getWidth(), currentSprite.getHeight(), 1, 1, getCurrentRotation());
 
         Batch.getBatch().end();
+    }
+
+    //The Animation where the spaceship goes forward
+    public void renderIntroAnimation(float delta){
+        if(this.getCurrentSkin().getY() < POSITION_Y){
+            this.getCurrentSkin().setY(this.getCurrentSkin().getY() + INTRO_VELOCITY);
+            renderPlayer(delta);
+        }else if(this.getCurrentSkin().getY() >= POSITION_Y){
+            this.getCurrentSkin().setY(POSITION_Y);
+            isIntroDone = true;
+
+        }
+    }
+
+    public boolean isIntroDone(){
+        return isIntroDone;
     }
 
     public void setCurrentRotation(int rotation){

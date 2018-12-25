@@ -1,5 +1,6 @@
 package de.noahwantoch.galaxyproject;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
@@ -12,24 +13,35 @@ public class MainGameScreen implements Screen {
     private Controller controller;
     private Background background;
     private AsteroidManagement asteroidManagement;
+    private Logo logo;
 
     @Override
     public void show() {
+        logo = new Logo();
         controller = new Controller();
         background = new Background();
         asteroidManagement = new AsteroidManagement();
         asteroidManagement.start();
-
-
     }
 
     @Override
     public void render(float delta) {
 
         background.renderBackground(delta);
-        asteroidManagement.render(delta);
-        controller.renderController(delta);
 
+        if(!logo.isDisposed()){
+            logo.renderLogo(delta);
+        }
+
+        if(logo.isDisposed() && !controller.getPlayer().isIntroDone()){
+            controller.getPlayer().renderIntroAnimation(delta);
+            Gdx.app.debug(TAG, "LEL");
+        }
+
+        if(logo.isDisposed() && controller.getPlayer().isIntroDone()){
+            asteroidManagement.render(delta);
+            controller.renderController(delta);
+        }
 
     }
 
@@ -59,6 +71,5 @@ public class MainGameScreen implements Screen {
         background.dispose();
         controller.dispose();
         asteroidManagement.dispose();
-
     }
 }
