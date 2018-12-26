@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 
-import de.noahwantoch.galaxyproject.AsteroidClasses.Asteroid;
-import de.noahwantoch.galaxyproject.Bullet;
+import de.noahwantoch.galaxyproject.BulletClasses.Bullet;
 
 public class Collisiondetector {
 

@@ -1,10 +1,11 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.BulletClasses;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.AroundThePlayer.Player;
 
 public class Bullet{
 

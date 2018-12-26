@@ -1,10 +1,12 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.Screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
+import de.noahwantoch.galaxyproject.HUD.Background;
+import de.noahwantoch.galaxyproject.ControllerClasses.Controller;
 import de.noahwantoch.galaxyproject.Helper.Batch;
+import de.noahwantoch.galaxyproject.HUD.Logo;
 
 public class MainGameScreen implements Screen {
 
@@ -35,7 +37,6 @@ public class MainGameScreen implements Screen {
 
         if(logo.isDisposed() && !controller.getPlayer().isIntroDone()){
             controller.getPlayer().renderIntroAnimation(delta);
-            Gdx.app.debug(TAG, "LEL");
         }
 
         if(logo.isDisposed() && controller.getPlayer().isIntroDone()){

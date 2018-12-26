@@ -1,6 +1,8 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.MAIN;
 
 import com.badlogic.gdx.Game;
+
+import de.noahwantoch.galaxyproject.Screens.MainGameScreen;
 
 public class MainClass extends Game {
 

@@ -42,11 +42,20 @@ public class AsteroidManagement {
 
             for(Asteroid asteroid : asteroids){
 
-                asteroid.getSprite().draw(Batch.getBatch());
+                if(!asteroid.isExploded()){
+                    asteroid.getSprite().draw(Batch.getBatch());
+                    asteroid.updateRotation();
+
+                }else{
+
+                    asteroid.renderExplosion(delta);
+
+                }
 
                 asteroid.setY(asteroid.getY() - VELOCITY);
                 asteroid.checkCoordinates();
-                asteroid.updateRotation();
+
+
             }
 
         }

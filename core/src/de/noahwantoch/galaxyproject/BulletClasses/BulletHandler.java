@@ -1,5 +1,4 @@
-package de.noahwantoch.galaxyproject;
-
+package de.noahwantoch.galaxyproject.BulletClasses;
 
 import java.util.ArrayList;
 

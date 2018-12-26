@@ -1,4 +1,4 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.HUD;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

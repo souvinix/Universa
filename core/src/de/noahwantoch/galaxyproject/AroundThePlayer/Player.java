@@ -1,4 +1,4 @@
-package de.noahwantoch.galaxyproject;
+package de.noahwantoch.galaxyproject.AroundThePlayer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,9 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.Asteroid;
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
+import de.noahwantoch.galaxyproject.BulletClasses.Bullet;
+import de.noahwantoch.galaxyproject.BulletClasses.BulletHandler;
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.Collisiondetector;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.HUD.Progressbar;
 
 public class Player {
 
@@ -40,7 +43,7 @@ public class Player {
     private float lifes;
     private float damage;
 
-    public Player(int skinID){
+    public Player(){
         bulletHandler = new BulletHandler();
         collisiondetector = new Collisiondetector();
         progressbar = new Progressbar();
@@ -75,12 +78,16 @@ public class Player {
             for(Bullet bullet : bulletHandler.getCurrentBullets()){
                 if(collisiondetector.checkBulletCollision(bullet, asteroid.getSprite())){
                     //Wenn eine Bullet ein Asteroid trifft
-                    asteroid.generateNewPosition();
-                    bullet.setAsteroidCollision(true);
+                    if(asteroid.getHitbox()){
+                        asteroid.setIsExploded(true);
+                        bullet.setAsteroidCollision(true);
+                    }
                 }
             }
 
-            isColided = collisiondetector.checkCollision(getCurrentSkin(), asteroid.getSprite());
+            if(asteroid.getHitbox()){
+                isColided = collisiondetector.checkCollision(getCurrentSkin(), asteroid.getSprite());
+            }
             if(isColided){
                 lifes -= damage;
                 progressbar.set(lifes);

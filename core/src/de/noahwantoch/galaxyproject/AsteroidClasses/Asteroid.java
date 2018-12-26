@@ -3,11 +3,9 @@ package de.noahwantoch.galaxyproject.AsteroidClasses;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector3;
-
-import java.util.Random;
 
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.Helper.RandomHelper;
 
 public class Asteroid{
 
@@ -18,8 +16,6 @@ public class Asteroid{
     private String[] paths;
     private String currentPath;
     private Sprite sprite;
-
-    private Random generator;
 
     private int maxAsteroids;
 
@@ -32,14 +28,23 @@ public class Asteroid{
     private float minHeight;
     private float maxHeight;
 
+    private boolean isExploded = false;
+    private static final int EXPLOSION_DURATION = 5;
+    private float counter;
+    private boolean hitbox = true;
+
+    //Used for handling asteroid-pieces, which spawns after explosion
+    private AsteroidPieceHandler asteroidPieceHandler;
+
     public Asteroid(String[] path, int maxAsteroids){
+        asteroidPieceHandler = new AsteroidPieceHandler();
+
         this.maxAsteroids = maxAsteroids;
-        generator = new Random();
         this.paths = path;
         currentPath = getRandomPath();
         sprite = new Sprite(new Texture(currentPath));
 
-        rotationBeginning = generator.nextInt(360);
+        rotationBeginning = RandomHelper.getRandomAxisValue(360, 0);
         this.getSprite().setRotation(rotationBeginning);
 
         currentRotationDegree = rotationBeginning;
@@ -50,6 +55,35 @@ public class Asteroid{
         maxHeight = minHeight * 1.5f;
     }
 
+    public boolean isExploded(){
+        return isExploded;
+    }
+
+    public void setIsExploded(boolean value){
+        counter = 0;
+        isExploded = value;
+        if(value){
+            asteroidPieceHandler.spawn(this);
+        }else{
+            asteroidPieceHandler.dispose();
+        }
+    }
+
+    public void renderExplosion(float delta){
+        if(isExploded()){
+            counter += delta;
+            setHitbox(false);
+            if(counter < EXPLOSION_DURATION){
+
+                asteroidPieceHandler.renderAsteroidPieces(delta);
+
+            }else{
+                setIsExploded(false);
+            }
+
+        }
+    }
+
     public void dispose(){
         sprite.getTexture().dispose();
     }
@@ -58,7 +92,7 @@ public class Asteroid{
         String randomPath = "";
         int index = 0;
         try{
-            index = generator.nextInt(paths.length);
+            index = RandomHelper.getRandomAxisValue(paths.length, 0);
             if(index > paths.length - 1){
                 index -= 1;
             }
@@ -72,21 +106,33 @@ public class Asteroid{
 
 
     public void generateNewPosition(){
+        setHitbox(true);
         float y = Gdx.graphics.getHeight() + (Gdx.graphics.getHeight() * (1f / maxAsteroids) * id);
 
-        float randomWidth = generator.nextFloat() * (maxWidth - minWidth) + minWidth;
-        float randomHeight = generator.nextFloat() * (maxHeight - minHeight) + minHeight;
+        float randomWidth = RandomHelper.getRandomAxisValue(maxWidth, minWidth);
+        float randomHeight = RandomHelper.getRandomAxisValue(maxHeight,  minHeight);
 
-        sprite.setX(generator.nextInt(Gdx.graphics.getWidth() - 0) - 0);
+        sprite.setX(RandomHelper.getRandomAxisValue(CurrentSystem.getScreenWidth(), 0));
         sprite.setY(y);
 
         this.currentPath = getRandomPath();
-        sprite.getTexture().dispose();
         sprite.setTexture(new Texture(currentPath));
 
         sprite.setSize(randomWidth, randomHeight);
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+
+        isExploded = false;
+        counter = 0;
     }
+
+    public void setHitbox(boolean value){
+        hitbox = value;
+    }
+
+    public boolean getHitbox(){
+        return hitbox;
+    }
+
 
     public int getId(){
         return this.id;

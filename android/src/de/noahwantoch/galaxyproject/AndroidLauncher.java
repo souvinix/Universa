@@ -6,7 +6,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import de.noahwantoch.galaxyproject.MainClass;
+import de.noahwantoch.galaxyproject.MAIN.MainClass;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
