@@ -1,21 +1,21 @@
 package de.noahwantoch.galaxyproject.AsteroidClasses;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
-import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 
 public class AsteroidManagement {
 
     private static final String TAG = AsteroidManagement.class.getSimpleName();
 
     //Important variables! =>
-    private static final float VELOCITY = 15;
     private static final int MAX_ASTEROIDS = 5;
     private static final String[] PATHS = {"asteroid.png"/*, "asteroid2.png"*/};
+
+    //No Constant, because after the game is over, the velocity stops
+    private float velocity = 15;
 
     private static ArrayList<Asteroid> asteroids;
     private boolean isStarted = false;
@@ -42,6 +42,12 @@ public class AsteroidManagement {
 
             for(Asteroid asteroid : asteroids){
 
+                if(GameHandler.isGameOver()){
+                    if(!(velocity <= 0)){
+                        velocity -= delta;
+                    }
+                }
+
                 if(!asteroid.isExploded()){
                     asteroid.getSprite().draw(Batch.getBatch());
                     asteroid.updateRotation();
@@ -52,7 +58,7 @@ public class AsteroidManagement {
 
                 }
 
-                asteroid.setY(asteroid.getY() - VELOCITY);
+                asteroid.setY(asteroid.getY() - velocity);
                 asteroid.checkCoordinates();
 
 

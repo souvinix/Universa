@@ -1,9 +1,11 @@
 package de.noahwantoch.galaxyproject.BulletClasses;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.noahwantoch.galaxyproject.AroundThePlayer.Skin;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 import de.noahwantoch.galaxyproject.AroundThePlayer.Player;
 
@@ -21,10 +23,14 @@ public class Bullet{
 
     private boolean asteroidCollision = false;
 
+    private static String currentBulletPath;
+
 
     public Bullet(){
 
-        bulletSprite = new Sprite(new Texture(NORMAL_BULLET_PATH));
+        currentBulletPath = Player.getSkin().getCurrentSkinDirectory();
+
+        bulletSprite = new Sprite(new Texture(currentBulletPath + NORMAL_BULLET_PATH));
         bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
         bulletSprite.setPosition(Player.getSkin().getSprite().getX(), Player.getSkin().getSprite().getY() + Player.getSkin().getSprite().getHeight());
 

@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.Asteroid;
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
+import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidPiece;
 import de.noahwantoch.galaxyproject.BulletClasses.Bullet;
 import de.noahwantoch.galaxyproject.BulletClasses.BulletHandler;
+import de.noahwantoch.galaxyproject.Game.ParticleHandler;
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.Collisiondetector;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 import de.noahwantoch.galaxyproject.HUD.Progressbar;
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 
 public class Player {
 
@@ -27,23 +30,29 @@ public class Player {
     private static final float SKIN_WIDTH = CurrentSystem.getScreenWidth() / skin.getSprite().getWidth() * 25;
     private static final float SKIN_HEIGHT = CurrentSystem.getScreenHeight() / skin.getSprite().getHeight() * 25;
 
+    private static final float EXPLOSION_SIZE = 2f;
+
     private static final float POSITION_Y = CurrentSystem.getScreenHeight() * HEIGHT_OF_SPACESHIP;
 
     private Sprite currentSprite;
 
     private float elapsedTime;
+    private float elapsedExplosionTime;
 
     private int currentRotation;
 
     private Collisiondetector collisiondetector;
     private boolean isColided = false;
-    private boolean isIntroDone = false;
 
     private Progressbar progressbar;
     private float lifes;
     private float damage;
 
+    private PlayerPieceHandler playerPieceHandler;
+
     public Player(){
+        playerPieceHandler = new PlayerPieceHandler();
+
         bulletHandler = new BulletHandler();
         collisiondetector = new Collisiondetector();
         progressbar = new Progressbar();
@@ -66,7 +75,7 @@ public class Player {
     }
 
     public void renderPlayer(float delta){
-        if(isIntroDone){
+        if(GameHandler.isIntroDone()){
             progressbar.renderProgressbar(delta);
         }
         bulletHandler.renderBullets(delta);
@@ -88,35 +97,61 @@ public class Player {
             if(asteroid.getHitbox()){
                 isColided = collisiondetector.checkCollision(getCurrentSkin(), asteroid.getSprite());
             }
+
+            //If the spaceship hit an asteroid
             if(isColided){
                 lifes -= damage;
                 progressbar.set(lifes);
+                if(lifes <= 0){
+                    GameHandler.setGameOver(true);
+                }
             }
         }
 
         Batch.getBatch().begin();
 
-        Batch.getBatch().draw((TextureRegion) this.getSkin().getAnimation().getKeyFrame(elapsedTime, true),
-                currentSprite.getX(), currentSprite.getY(), currentSprite.getWidth() / 2, currentSprite.getHeight() / 2,
-                currentSprite.getWidth(), currentSprite.getHeight(), 1, 1, getCurrentRotation());
+        if(GameHandler.isGameOver()){ //If the game is over
+
+            if(!GameHandler.isAnimationFinished()){ //if the explosion isn't finished
+
+                if(!getSkin().getExplosionAnimation().isAnimationFinished(elapsedExplosionTime)){
+                    //Explosion beginning =>
+                    Batch.getBatch().draw((TextureRegion) getSkin().getExplosionAnimation().getKeyFrame(elapsedExplosionTime, false),
+                            currentSprite.getX(), currentSprite.getY(), currentSprite.getWidth() / 2, currentSprite.getHeight() / 2,
+                            currentSprite.getWidth(), currentSprite.getHeight(), EXPLOSION_SIZE * 1.5f, EXPLOSION_SIZE, 0);
+
+                    elapsedExplosionTime += Gdx.graphics.getDeltaTime();
+
+                    if(!playerPieceHandler.isSpawned()){
+                        playerPieceHandler.spawn(getSkin().getSprite().getX() + getSkin().getSprite().getWidth() / 3, getSkin().getSprite().getY() + getSkin().getSprite().getHeight() / 3);
+                    }
+                }else if(playerPieceHandler.isAnimationFinished()){
+                    //If the explosion is done =>
+
+                }
+
+            }
+            playerPieceHandler.renderPlayerPieces(delta);
+
+        }else{
+            Batch.getBatch().draw((TextureRegion) getSkin().getAnimation().getKeyFrame(elapsedTime, true),
+                    currentSprite.getX(), currentSprite.getY(), currentSprite.getWidth() / 2, currentSprite.getHeight() / 2,
+                    currentSprite.getWidth(), currentSprite.getHeight(), 1, 1, getCurrentRotation());
+        }
 
         Batch.getBatch().end();
     }
 
-    //The Animation where the spaceship goes forward
+    //The Intro-Animation where the spaceship goes forward
     public void renderIntroAnimation(float delta){
-        if(this.getCurrentSkin().getY() < POSITION_Y){
-            this.getCurrentSkin().setY(this.getCurrentSkin().getY() + INTRO_VELOCITY);
+        if(getCurrentSkin().getY() < POSITION_Y){
+            getCurrentSkin().setY(getCurrentSkin().getY() + INTRO_VELOCITY);
             renderPlayer(delta);
-        }else if(this.getCurrentSkin().getY() >= POSITION_Y){
-            this.getCurrentSkin().setY(POSITION_Y);
-            isIntroDone = true;
+        }else if(getCurrentSkin().getY() >= POSITION_Y){
+            getCurrentSkin().setY(POSITION_Y);
+            GameHandler.setIsIntroDone(true);
 
         }
-    }
-
-    public boolean isIntroDone(){
-        return isIntroDone;
     }
 
     public void setCurrentRotation(int rotation){

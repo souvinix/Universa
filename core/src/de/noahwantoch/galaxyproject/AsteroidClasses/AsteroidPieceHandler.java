@@ -1,8 +1,5 @@
 package de.noahwantoch.galaxyproject.AsteroidClasses;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
 import java.util.ArrayList;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
@@ -36,7 +33,7 @@ public class AsteroidPieceHandler {
             asteroidPiece.getSprite().setSize(asteroid.getWidth() / 3, asteroid.getHeight() / 3);
             asteroidPiece.getSprite().setRotation(RandomHelper.getRandomAxisValue(360, 0));
 
-            asteroidPiece.generateNewDirection();
+            asteroidPiece.generateRandomDirection();
         }
     }
 

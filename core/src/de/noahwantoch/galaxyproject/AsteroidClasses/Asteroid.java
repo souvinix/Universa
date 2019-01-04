@@ -2,14 +2,28 @@ package de.noahwantoch.galaxyproject.AsteroidClasses;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import de.noahwantoch.galaxyproject.AroundThePlayer.Skin;
+import de.noahwantoch.galaxyproject.Helper.AnimationHandler;
+import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 import de.noahwantoch.galaxyproject.Helper.RandomHelper;
 
 public class Asteroid{
 
     private static final String TAG = Asteroid.class.getSimpleName();
+
+    /** ALL attributes about the explosion sprite-sheet */
+    private static final String EXPLOSION_FILE = "asteroid_explosion.png";
+    private static final int EXPLOSION_FILE_WIDTH = 64;
+    private static final int EXPLOSION_FILE_HEIGHT = 64;
+    private static final float EXPLOSION_FILE_SIZE_MULTIPLIER = 2f * Gdx.graphics.getDensity();
+    private static final float EXPLOSION_FILE_FRAME_DURATION = 1f/32f;
+    private static final int EXPLOSION_SPRITESHEET_COLUMN_WIDTH = 4;
+    private static final int EXPLOSION_SPRITESHEET_COLUMN_HEIGHT = 2;
 
     private int id; //0 by default
 
@@ -33,11 +47,14 @@ public class Asteroid{
     private float counter;
     private boolean hitbox = true;
 
+    private Animation currentAnimation;
+    private AnimationHandler animationHandler;
+
     //Used for handling asteroid-pieces, which spawns after explosion
-    private AsteroidPieceHandler asteroidPieceHandler;
+    private AsteroidPieceHandler pieceHandler;
 
     public Asteroid(String[] path, int maxAsteroids){
-        asteroidPieceHandler = new AsteroidPieceHandler();
+        pieceHandler = new AsteroidPieceHandler();
 
         this.maxAsteroids = maxAsteroids;
         this.paths = path;
@@ -53,6 +70,9 @@ public class Asteroid{
         maxWidth = minWidth * 1.5f;
         minHeight = Gdx.graphics.getDensity() * sprite.getHeight() / 4f;
         maxHeight = minHeight * 1.5f;
+
+        animationHandler = new AnimationHandler();
+        currentAnimation = getCurrentAnimation();
     }
 
     public boolean isExploded(){
@@ -63,25 +83,36 @@ public class Asteroid{
         counter = 0;
         isExploded = value;
         if(value){
-            asteroidPieceHandler.spawn(this);
+            pieceHandler.spawn(this);
         }else{
-            asteroidPieceHandler.dispose();
+            pieceHandler.dispose();
         }
     }
 
     public void renderExplosion(float delta){
         if(isExploded()){
+
             counter += delta;
+
+            //Every spaceship has a own asteroid-explosion =>
+            if(!currentAnimation.isAnimationFinished(counter)){
+                Batch.getBatch().draw((TextureRegion) currentAnimation.getKeyFrame(counter, false),
+                        getX() + getWidth() / 2 - EXPLOSION_FILE_WIDTH / 2, getY() + getHeight() / 2 - EXPLOSION_FILE_HEIGHT / 2
+                        , EXPLOSION_FILE_WIDTH / 2, EXPLOSION_FILE_HEIGHT / 2,
+                        EXPLOSION_FILE_WIDTH, EXPLOSION_FILE_HEIGHT, EXPLOSION_FILE_SIZE_MULTIPLIER,
+                        EXPLOSION_FILE_SIZE_MULTIPLIER, 0);
+            }
+
             setHitbox(false);
             if(counter < EXPLOSION_DURATION){
 
-                asteroidPieceHandler.renderAsteroidPieces(delta);
+                pieceHandler.renderAsteroidPieces(delta);
 
             }else{
                 setIsExploded(false);
             }
-
         }
+
     }
 
     public void dispose(){
@@ -144,6 +175,12 @@ public class Asteroid{
             Gdx.app.debug(TAG, "ID darf nicht: 0 sein.");
         }
         this.id = x;
+    }
+
+    public Animation getCurrentAnimation(){
+        return animationHandler.generateNotSymmetricAnimation(Skin.getCurrentSkinDirectory() +
+                EXPLOSION_FILE, EXPLOSION_FILE_WIDTH, EXPLOSION_FILE_HEIGHT, EXPLOSION_FILE_FRAME_DURATION,
+                EXPLOSION_SPRITESHEET_COLUMN_WIDTH, EXPLOSION_SPRITESHEET_COLUMN_HEIGHT);
     }
 
     public Sprite getSprite(){

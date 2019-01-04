@@ -1,4 +1,4 @@
-package de.noahwantoch.galaxyproject.MAIN;
+package de.noahwantoch.galaxyproject;
 
 import com.badlogic.gdx.Game;
 

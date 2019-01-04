@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 import de.noahwantoch.galaxyproject.Helper.Touchdetector;
 import de.noahwantoch.galaxyproject.AroundThePlayer.Player;
 
@@ -69,43 +70,46 @@ public class Controller {
 
         Batch.getBatch().begin();
 
-        if(!touchdetector.isTouching(firebutton, CONTROLLER_HITBOX)){
-            firebutton.setScale(1, 1);
-        }else{
-            firebutton.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
-            player.fire();
-        }
-        firebutton.draw(Batch.getBatch());
+        if(!GameHandler.isGameOver()){
+            if(!touchdetector.isTouching(firebutton, CONTROLLER_HITBOX)){
+                firebutton.setScale(1, 1);
+            }else{
+                firebutton.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
+                player.fire();
+            }
+            firebutton.draw(Batch.getBatch());
 
-        if(!touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
-            leftSprite.setScale(1, 1);
-            player.setCurrentRotation(0);
+            if(!touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
+                leftSprite.setScale(1, 1);
+                player.setCurrentRotation(0);
+            }
+
+            if(!touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
+                rightSprite.setScale(1, 1);
+                player.setCurrentRotation(0);
+            }
+
+            if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
+                leftSprite.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
+                //Actually function of the left Button =>
+                this.toLeft();
+                player.setCurrentRotation(ROTATION_VALUE);
+            }
+            leftSprite.draw(Batch.getBatch());
+
+            if(touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
+                rightSprite.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
+                //Actually function of the right Button =>
+                this.toRight();
+                player.setCurrentRotation(-ROTATION_VALUE);
+            }
+            rightSprite.draw(Batch.getBatch());
+
+            if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX) && touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
+                player.setCurrentRotation(0);
+            }
         }
 
-        if(!touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
-            rightSprite.setScale(1, 1);
-            player.setCurrentRotation(0);
-        }
-
-        if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX)){
-            leftSprite.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
-            //Actually function of the left Button =>
-            this.toLeft();
-            player.setCurrentRotation(ROTATION_VALUE);
-        }
-        leftSprite.draw(Batch.getBatch());
-
-        if(touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
-            rightSprite.setScale(PRESSED_ADDITION, PRESSED_ADDITION);
-            //Actually function of the right Button =>
-            this.toRight();
-            player.setCurrentRotation(-ROTATION_VALUE);
-        }
-        rightSprite.draw(Batch.getBatch());
-
-        if(touchdetector.isTouching(leftSprite, CONTROLLER_HITBOX) && touchdetector.isTouching(rightSprite, CONTROLLER_HITBOX)){
-            player.setCurrentRotation(0);
-        }
         Batch.getBatch().end();
     }
 

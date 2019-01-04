@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 
 public class Background {
 
@@ -17,7 +18,7 @@ public class Background {
     private static final String STARS_BEHIND_PATH = "sterne3.png";
 
     private static final int MAX_STARS_OBJECTS = 2; //should'nt be 1 | pre-creating the stars, because then it looks timeless
-    private static final float VELOCITY = 3;
+    private float velocity = 3;
 
     private static Sprite bg = new Sprite(new Texture(BG_PATH));
     private static ArrayList<Sprite> starsAhead = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
@@ -49,6 +50,14 @@ public class Background {
     }
 
     public void renderBackground(float delta){
+        if(GameHandler.isGameOver()){
+            if(!(velocity <= 0)){
+                velocity -= delta;
+            }else{
+                velocity = 0;
+            }
+        }
+
         Batch.getBatch().begin();
 
         Batch.getBatch().draw(bg, 0, 0, CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight()); //The camera zooms in
@@ -57,7 +66,7 @@ public class Background {
             if(s.getY() < - CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - VELOCITY * 3);
+                s.setY(s.getY() - velocity * 3);
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
@@ -66,7 +75,7 @@ public class Background {
             if(s.getY() < -CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - VELOCITY * 2);
+                s.setY(s.getY() - velocity * 2);
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
@@ -75,7 +84,7 @@ public class Background {
             if(s.getY() < -CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - VELOCITY);
+                s.setY(s.getY() - velocity);
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }

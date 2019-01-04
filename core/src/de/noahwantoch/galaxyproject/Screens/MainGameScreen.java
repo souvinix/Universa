@@ -6,7 +6,8 @@ import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
 import de.noahwantoch.galaxyproject.HUD.Background;
 import de.noahwantoch.galaxyproject.ControllerClasses.Controller;
 import de.noahwantoch.galaxyproject.Helper.Batch;
-import de.noahwantoch.galaxyproject.HUD.Logo;
+import de.noahwantoch.galaxyproject.HUD.LogoHandler;
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 
 public class MainGameScreen implements Screen {
 
@@ -15,11 +16,11 @@ public class MainGameScreen implements Screen {
     private Controller controller;
     private Background background;
     private AsteroidManagement asteroidManagement;
-    private Logo logo;
+    private LogoHandler logoHandler;
 
     @Override
     public void show() {
-        logo = new Logo();
+        logoHandler = new LogoHandler();
         controller = new Controller();
         background = new Background();
         asteroidManagement = new AsteroidManagement();
@@ -28,18 +29,18 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         background.renderBackground(delta);
 
-        if(!logo.isDisposed()){
-            logo.renderLogo(delta);
+
+        if(!logoHandler.isDisposed()){
+            logoHandler.renderLogo(delta);
         }
 
-        if(logo.isDisposed() && !controller.getPlayer().isIntroDone()){
+        if(logoHandler.isDisposed() && !GameHandler.isIntroDone()){
             controller.getPlayer().renderIntroAnimation(delta);
         }
 
-        if(logo.isDisposed() && controller.getPlayer().isIntroDone()){
+        if(logoHandler.isDisposed() && GameHandler.isIntroDone()){
             asteroidManagement.render(delta);
             controller.renderController(delta);
         }
@@ -68,9 +69,10 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        Batch.getBatch().dispose();
         background.dispose();
         controller.dispose();
         asteroidManagement.dispose();
+
+        Batch.getBatch().dispose();
     }
 }

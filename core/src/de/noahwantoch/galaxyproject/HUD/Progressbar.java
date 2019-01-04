@@ -3,6 +3,10 @@ package de.noahwantoch.galaxyproject.HUD;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import java.awt.font.LineMetrics;
+import java.awt.geom.Line2D;
 
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
@@ -31,7 +35,7 @@ public class Progressbar {
         balken.setSize(PROGRESSBAR_WIDTH, PROGRESSBAR_HEIGHT);
 
         progressbar.setPosition(CurrentSystem.getScreenWidth() * (DISTANCE_TO_BORDER / 2), CurrentSystem.getScreenHeight() - PROGRESSBAR_HEIGHT - CurrentSystem.getScreenWidth() * (DISTANCE_TO_BORDER / 2));
-        balken.setPosition(CurrentSystem.getScreenWidth() * (DISTANCE_TO_BORDER / 2), CurrentSystem.getScreenHeight() - PROGRESSBAR_HEIGHT - CurrentSystem.getScreenWidth() * (DISTANCE_TO_BORDER / 2));
+        balken.setPosition(CurrentSystem.getScreenWidth() / 2 - balken.getWidth() / 2, CurrentSystem.getScreenHeight() - PROGRESSBAR_HEIGHT - CurrentSystem.getScreenWidth() * (DISTANCE_TO_BORDER / 2));
 
     }
 
@@ -47,7 +51,7 @@ public class Progressbar {
     public void renderProgressbar(float delta){
         Batch.getBatch().begin();
 
-        Batch.getBatch().draw(balken, balken.getX(), balken.getY(), balken.getWidth(), balken.getHeight());
+        Batch.getBatch().draw(balken, CurrentSystem.getScreenWidth() / 2 - balken.getWidth() / 2, balken.getY(), balken.getWidth(), balken.getHeight());
         Batch.getBatch().draw(progressbar, progressbar.getX(), progressbar.getY(), progressbar.getWidth(), progressbar.getHeight());
 
         Batch.getBatch().end();
@@ -62,13 +66,6 @@ public class Progressbar {
 
     public float getProgress(){
         return balken.getWidth();
-    }
-
-    public boolean isGameOver(){
-        if(getProgress() <= 0){
-            return true;
-        }
-        return false;
     }
 
 }
