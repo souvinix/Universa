@@ -23,7 +23,7 @@ public class Font {
 
     private boolean isDisposed = false;
 
-    public Font(String fontDataName, float size){
+    public Font(String fontDataName, float size, int shadowYOffset){
         this.size = size;
         position = new Vector3();
 
@@ -32,7 +32,7 @@ public class Font {
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) size;
         parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        parameter.shadowOffsetY = (int) (5f * Gdx.graphics.getDensity());
+        parameter.shadowOffsetY = shadowYOffset;
 
         textFont = generator.generateFont(parameter);
 
@@ -40,13 +40,17 @@ public class Font {
     }
 
     public void draw(SpriteBatch batch, String text){
-        batch.begin();
-
         if(!isDisposed()){
-            textFont.draw(batch, text, position.x - size / 2, position.y, 1, text.length(), size, 1, false, text);
+            textFont.draw(batch, text, position.x - getSize() / 2, position.y, 1, text.length(), getSize(), 1, false, text);
         }
+    }
 
-        batch.end();
+    public void setSize(float value){
+        size = value;
+    }
+
+    public float getSize(){
+        return size;
     }
 
     public void setX(float x){

@@ -17,13 +17,13 @@ public class Controller {
     private static final float HEIGHT_OF_CONTROLLER = CurrentSystem.getScreenHeight() * 0.1f; //Y-Position
     private static final float SIZE_MULTIPLIER = 0.05f; //Relation //0.05f is default
     private static final float PRESSED_ADDITION = 1.2f; //If you press the Button, size addition
-    private static final int CONTROLLER_HITBOX = 0; //0 is default //The Button (invisible) gets bigger //doesn't work yet(!)
+    private static final int CONTROLLER_HITBOX = 50; //0 is default //The Button (invisible) gets bigger
     private static final float VELOCITY = 15f; //How much units, should the spaceship slide to right/left
     private static final int ROTATION_VALUE = 15; //How many degrees should the spaceship rotate
 
     // Path's of the Buttons ->
-    private static final String LEFT_BUTTON_PATH = "links_button.png";
-    private static final String RIGHT_BUTTON_PATH = "rechts_button.png";
+    private static final String LEFT_BUTTON_PATH = "leftbutton.png";
+    private static final String RIGHT_BUTTON_PATH = "rightbutton.png";
     private static final String FIREBUTTON_PATH = "shooting_button.png";
 
     //The Button's object's ->

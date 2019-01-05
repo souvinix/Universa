@@ -2,6 +2,7 @@ package de.noahwantoch.galaxyproject;
 
 import com.badlogic.gdx.Game;
 
+import de.noahwantoch.galaxyproject.Game.GameHandler;
 import de.noahwantoch.galaxyproject.Screens.MainGameScreen;
 
 public class MainClass extends Game {

@@ -1,13 +1,16 @@
 package de.noahwantoch.galaxyproject.Screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import de.noahwantoch.galaxyproject.AsteroidClasses.AsteroidManagement;
+import de.noahwantoch.galaxyproject.Game.Button;
 import de.noahwantoch.galaxyproject.HUD.Background;
 import de.noahwantoch.galaxyproject.ControllerClasses.Controller;
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.HUD.LogoHandler;
 import de.noahwantoch.galaxyproject.Game.GameHandler;
+import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
 
 public class MainGameScreen implements Screen {
 
@@ -30,7 +33,6 @@ public class MainGameScreen implements Screen {
     @Override
     public void render(float delta) {
         background.renderBackground(delta);
-
 
         if(!logoHandler.isDisposed()){
             logoHandler.renderLogo(delta);

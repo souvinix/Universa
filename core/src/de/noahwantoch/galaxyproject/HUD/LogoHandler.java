@@ -2,6 +2,9 @@ package de.noahwantoch.galaxyproject.HUD;
 
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
+
+import de.noahwantoch.galaxyproject.Game.Button;
 import de.noahwantoch.galaxyproject.Game.Font;
 import de.noahwantoch.galaxyproject.Helper.Batch;
 import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
@@ -32,11 +35,27 @@ public class LogoHandler {
     private boolean turnAlpha = false;
     private float ttp_counter = 0;
 
+    private Button skinsButton;
+    private Button statsButton;
+    private Button optionsButton;
+
+    private ArrayList<Button> buttons;
+
     public LogoHandler(){
-        font = new Font(FONT_DATA_NAME, TITLE_SIZE);
+        buttons = new ArrayList<Button>();
+
+        font = new Font(FONT_DATA_NAME, TITLE_SIZE, (int) (5f * Gdx.graphics.getDensity()));
         font.setPosition(CurrentSystem.getScreenWidth() / 2, CurrentSystem.getScreenHeight() * 0.8f);
-        ttpFont = new Font(FONT_DATA_NAME, TTP_SIZE);
+        ttpFont = new Font(FONT_DATA_NAME, TTP_SIZE, (int) (5f * Gdx.graphics.getDensity()));
         ttpFont.setPosition(CurrentSystem.getScreenWidth() / 2, CurrentSystem.getScreenHeight() * 0.3f);
+
+        skinsButton = new Button("Skins", CurrentSystem.getScreenWidth() / 2, CurrentSystem.getScreenHeight() / 2, 3f * Gdx.graphics.getDensity());
+        statsButton = new Button("Statistik", CurrentSystem.getScreenWidth() / 2, CurrentSystem.getScreenHeight() / 2 + (int) skinsButton.getHeight(), 3f * Gdx.graphics.getDensity());
+        optionsButton = new Button("Optionen", CurrentSystem.getScreenWidth() / 2, CurrentSystem.getScreenHeight() - (CurrentSystem.getScreenHeight() / 2 + (int) skinsButton.getHeight()), 3f * Gdx.graphics.getDensity());
+
+        buttons.add(skinsButton);
+        buttons.add(statsButton);
+        buttons.add(optionsButton);
 
         r = 1f;
         g = 1f;
@@ -46,10 +65,19 @@ public class LogoHandler {
 
     public void renderLogo(float delta){
 
+        Batch.getBatch().begin();
+
         font.draw(Batch.getBatch(), TITLE);
         font.setColor(r, g, b, logoAlpha);
         ttpFont.draw(Batch.getBatch(), TTP_TEXT);
         ttpFont.setColor(r, g, b, ttpAlpha);
+
+        for(Button button : buttons){
+            button.renderButton(Batch.getBatch(), delta);
+            button.setAlphaAndSize(logoAlpha);
+        }
+
+        Batch.getBatch().end();
 
         if(started && logoAlpha != 0f){ //if taped on the screen
             if(!(logoAlpha < 0)){
@@ -76,11 +104,9 @@ public class LogoHandler {
                 ttp_counter = 0f;
                 turnAlpha = !turnAlpha;
             }
-
-
         }
 
-        if(Gdx.input.justTouched()){
+        if(Gdx.input.justTouched() && !skinsButton.isPressed() && !statsButton.isPressed() && !optionsButton.isPressed()){
             started = true;
         }
     }
