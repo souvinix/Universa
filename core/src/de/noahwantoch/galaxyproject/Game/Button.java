@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
 import de.noahwantoch.galaxyproject.Helper.Touchdetector;
+import de.noahwantoch.galaxyproject.Screens.AbstractScreen;
+import de.noahwantoch.galaxyproject.Screens.ScreenEnum;
+import de.noahwantoch.galaxyproject.Screens.ScreenHandler;
 
 public class Button {
 
@@ -18,8 +21,9 @@ public class Button {
     private static final int TILESET_WIDTH = 76;
     private static final int TILESET_HEIGHT = 22;
 
+    private boolean isDisposed = false;
+
     private boolean pressed = false;
-    private boolean isWindowChanged = false;
 
     private TextureRegion[] allRegions;
 
@@ -33,7 +37,11 @@ public class Button {
 
     private Touchdetector touchdetector;
 
-    private Screen screen;
+    private ScreenEnum functionScreen;
+
+    private int funcCounter;
+
+    private boolean hasRestartScreen;
 
     public Button(String text, float x, float y, float size){
 
@@ -47,20 +55,20 @@ public class Button {
 
         touchdetector = new Touchdetector();
 
-        setX(x);
-        setY(y);
+        setPosition(x, y);
 
         textFont = new Font(FONT, getWidth() * 0.2f, 1);
         textFont.setPosition(getX() + getWidth() / 2f, getY() + getHeight() / 1.5f + Gdx.graphics.getDensity() * 3f);
         textFont.setColor(0f, 0f, 0f, 1f);
 
+        hasRestartScreen = false;
+
     }
 
-    public void renderButton(SpriteBatch batch, float delta){
+    public void draw(SpriteBatch batch, float delta){
         checkPressed();
 
         batch.draw(allRegions[state], getX(), getY(),getWidth() / 2 ,getHeight() / 2, getWidth(), getHeight(), getCurrentScale() ,getCurrentScale(), 0);
-
         textFont.draw(batch, text);
 
     }
@@ -77,6 +85,9 @@ public class Button {
             if(pressed){
                 textFont.setY(textFont.getY() + Gdx.graphics.getDensity() * 2);
 
+                runFunction();
+                funcCounter++;
+
             }
             pressed = false;
             state = 0;
@@ -88,14 +99,38 @@ public class Button {
 
         for(int i = 0; i < allRegions.length; i++){
             allRegions[i].setTexture(new Texture(path));
-            allRegions[i].setRegionWidth((int) widthPx / 2 * (i + 1));
+            allRegions[i].setRegionWidth((int) widthPx / 2);
             allRegions[i].setRegionHeight((int) heightPx);
         }
 
     }
 
-    public void setScreen(Screen screen){
-        this.screen = screen;
+    public void setFunctionRestartScreen(ScreenEnum screenEnum){
+        hasRestartScreen = true;
+        functionScreen = screenEnum;
+    }
+
+    public void runFunction(){
+        if(funcCounter < 1){
+            if(hasRestartScreen && functionScreen != null){
+                ScreenHandler.getInstance().restartScreen(functionScreen);
+            }
+
+            else if(functionScreen != null){
+                ScreenHandler.getInstance().showScreen(functionScreen);
+            }
+        }
+    }
+
+    public void setFunctionScreen(ScreenEnum screen){
+        if(screen == null){
+            throw new NullPointerException("Screen mustn't be null");
+        }
+        functionScreen = screen;
+    }
+
+    public ScreenEnum getFunctionScreen(){
+        return functionScreen;
     }
 
     private float getCurrentScale(){
@@ -122,6 +157,11 @@ public class Button {
 
     public boolean isPressed(){
         return pressed;
+    }
+
+    public void setPosition(float x, float y){
+        setX(x);
+        setY(y);
     }
 
     public float getX(){
@@ -152,9 +192,15 @@ public class Button {
         text = newText;
     }
 
+    private boolean isDisposed(){
+        return isDisposed;
+    }
+
     public void dispose(){
-        for(TextureRegion textureRegion : allRegions){
-            textureRegion.getTexture().dispose();
+        if(!isDisposed()){
+            for(TextureRegion textureRegion : allRegions){
+                textureRegion.getTexture().dispose();
+            }
         }
     }
 }

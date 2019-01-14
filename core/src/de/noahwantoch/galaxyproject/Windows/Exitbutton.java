@@ -3,6 +3,8 @@ package de.noahwantoch.galaxyproject.Windows;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.noahwantoch.galaxyproject.Game.Button;
+import de.noahwantoch.galaxyproject.Screens.ScreenEnum;
+import de.noahwantoch.galaxyproject.Screens.ScreenHandler;
 
 public class Exitbutton extends Button{
 
@@ -19,7 +21,12 @@ public class Exitbutton extends Button{
     }
 
     @Override
-    public void renderButton(SpriteBatch batch, float delta) {
-        super.renderButton(batch, delta);
+    public void runFunction() {
+        ScreenHandler.getInstance().showScreen(ScreenHandler.getInstance().getLastScreen());
+    }
+
+    @Override
+    public void draw(SpriteBatch batch, float delta) {
+        super.draw(batch, delta);
     }
 }

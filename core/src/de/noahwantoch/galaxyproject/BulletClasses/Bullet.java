@@ -1,22 +1,12 @@
 package de.noahwantoch.galaxyproject.BulletClasses;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import de.noahwantoch.galaxyproject.AroundThePlayer.Skin;
-import de.noahwantoch.galaxyproject.Helper.CurrentSystem;
-import de.noahwantoch.galaxyproject.AroundThePlayer.Player;
-
 public class Bullet{
 
     private static final String TAG = Bullet.class.getSimpleName();
-
-    private static final String NORMAL_BULLET_PATH = "bullets.png";
-    private static final float BULLET_WIDTH = Player.getSkin().getSprite().getWidth();
-    private static final float BULLET_HEIGHT = CurrentSystem.getScreenHeight() * 0.05f;
-    private static final float VELOCITY = 30;
 
     private Sprite bulletSprite;
     private boolean isDisposed = false;
@@ -25,22 +15,21 @@ public class Bullet{
 
     private static String currentBulletPath;
 
+    public Bullet(String path, float width, float height, float startX, float startY){
 
-    public Bullet(){
+        currentBulletPath = path;
 
-        currentBulletPath = Player.getSkin().getCurrentSkinDirectory();
-
-        bulletSprite = new Sprite(new Texture(currentBulletPath + NORMAL_BULLET_PATH));
-        bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
-        bulletSprite.setPosition(Player.getSkin().getSprite().getX(), Player.getSkin().getSprite().getY() + Player.getSkin().getSprite().getHeight());
+        bulletSprite = new Sprite(new Texture(path));
+        bulletSprite.setSize(width, height);
+        bulletSprite.setPosition(startX, startY);
 
     }
 
-    public void update(SpriteBatch batch){
+    public void update(SpriteBatch batch, float velocity){
         batch.begin();
         bulletSprite.draw(batch);
         batch.end();
-        bulletSprite.setY(bulletSprite.getY() + VELOCITY);
+        bulletSprite.setY(bulletSprite.getY() + velocity);
     }
 
     public Sprite getBulletSprite(){

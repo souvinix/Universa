@@ -20,7 +20,6 @@ public class Skin {
     private static final int TILE_HEIGHT = 294;
 
     private String path;
-    private Texture texture;
     private Sprite sprite;
 
     private HashMap<Integer, String> skinDirectoryByID;
@@ -56,8 +55,7 @@ public class Skin {
             internalDirectory = ALL_SKIN_DIRECTORYS[0];
         }
 
-        texture = new Texture(path);
-        sprite = new Sprite(texture);
+        sprite = new Sprite(new Texture(path));
 
     }
 
@@ -93,6 +91,14 @@ public class Skin {
         return t;
     }
 
+    public float getWidth(){
+        return TILE_WIDTH;
+    }
+
+    public float getHeight(){
+        return TILE_HEIGHT;
+    }
+
     public Animation getAnimation() {
         return spaceshipAnimation;
     }
@@ -102,13 +108,9 @@ public class Skin {
     }
 
     public void dispose(){
-        texture.dispose();
         sprite.getTexture().dispose();
 
-        skinDirectoryByID = null;
-        spaceshipAnimation = null;
-        explosionAnimation = null;
-
+        animationHandler.dispose();
     }
 
     public static String getCurrentSkinDirectory(){

@@ -1,5 +1,6 @@
 package de.noahwantoch.galaxyproject.HUD;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -20,12 +21,14 @@ public class Background {
     private static final int MAX_STARS_OBJECTS = 2; //should'nt be 1 | pre-creating the stars, because then it looks timeless
     private float velocity = 3;
 
-    private static Sprite bg = new Sprite(new Texture(BG_PATH));
+    private static Sprite bg;
     private static ArrayList<Sprite> starsAhead = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
     private static ArrayList<Sprite> starsCenter = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
     private static ArrayList<Sprite> starsBehind = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
 
     public Background() {
+        bg = new Sprite(new Texture(BG_PATH));
+
         for (int i = 0; i < MAX_STARS_OBJECTS; i++) {
             starsAhead.add(new Sprite(new Texture(STARS_AHEAD_PATH)));
             starsCenter.add(new Sprite(new Texture(STARS_CENTER_PATH)));
@@ -106,6 +109,11 @@ public class Background {
             starsCenter.get(i).getTexture().dispose();
             starsBehind.get(i).getTexture().dispose();
         }
+
+        starsAhead.clear();
+        starsCenter.clear();
+        starsBehind.clear();
+
         bg.getTexture().dispose();
     }
 

@@ -1,16 +1,11 @@
 package de.noahwantoch.galaxyproject.Game;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 public class GameHandler{
 
     private static boolean isGameOver = false;
     private static boolean isIntroDone = false;
     private static boolean isAnimationFinished = false;
+    private static boolean isExplosionDone = false;
     private static final int MAX_TOUCHES = 6;
 
     private GameHandler() {}
@@ -41,6 +36,21 @@ public class GameHandler{
 
     public static int getMaxTouches(){
         return MAX_TOUCHES;
+    }
+
+    public static boolean isExplosionDone(){
+        return isExplosionDone;
+    }
+
+    public static void setIsExplosionDone(boolean value){
+        isExplosionDone = value;
+    }
+
+    public static void restart(){
+        setGameOver(false);
+        setIsIntroDone(false);
+        setAnimationFinished(false);
+        setIsExplosionDone(false);
     }
 
 }

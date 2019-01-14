@@ -45,7 +45,7 @@ public class Window{
         if(!isDisposed() && focus){
 
             window.draw(batch);
-            exitbutton.renderButton(batch, delta);
+            exitbutton.draw(batch, delta);
 
         }
 
