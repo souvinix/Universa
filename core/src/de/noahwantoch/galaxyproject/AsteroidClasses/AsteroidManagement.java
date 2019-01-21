@@ -1,5 +1,7 @@
 package de.noahwantoch.galaxyproject.AsteroidClasses;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,7 +17,7 @@ public class AsteroidManagement {
     private static final String[] PATHS = {"asteroid.png"/*, "asteroid2.png"*/};
 
     //No Constant, because after the game is over, the velocity stops
-    private float velocity = 15;
+    private float velocity = 1000f;
 
     private static ArrayList<Asteroid> asteroids;
     private boolean isStarted = false;
@@ -58,7 +60,7 @@ public class AsteroidManagement {
 
                 }
 
-                asteroid.setY(asteroid.getY() - velocity);
+                asteroid.setY(asteroid.getY() - velocity * Gdx.graphics.getDeltaTime());
                 asteroid.checkCoordinates();
 
 

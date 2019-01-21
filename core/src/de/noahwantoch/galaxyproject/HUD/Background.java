@@ -19,7 +19,7 @@ public class Background {
     private static final String STARS_BEHIND_PATH = "sterne3.png";
 
     private static final int MAX_STARS_OBJECTS = 2; //should'nt be 1 | pre-creating the stars, because then it looks timeless
-    private float velocity = 3;
+    private float velocity = 200f;
 
     private static Sprite bg;
     private static ArrayList<Sprite> starsAhead = new ArrayList<Sprite>(MAX_STARS_OBJECTS);
@@ -69,7 +69,7 @@ public class Background {
             if(s.getY() < - CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - velocity * 3);
+                s.setY(s.getY() - velocity * 3f * Gdx.graphics.getDeltaTime());
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
@@ -78,7 +78,7 @@ public class Background {
             if(s.getY() < -CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - velocity * 2);
+                s.setY(s.getY() - velocity * 2f * Gdx.graphics.getDeltaTime());
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }
@@ -87,7 +87,7 @@ public class Background {
             if(s.getY() < -CurrentSystem.getScreenHeight()){
                 s.setY(CurrentSystem.getScreenHeight());
             }else{
-                s.setY(s.getY() - velocity);
+                s.setY(s.getY() - velocity * Gdx.graphics.getDeltaTime());
             }
             Batch.getBatch().draw(s, 0,s.getY(),CurrentSystem.getScreenWidth(), CurrentSystem.getScreenHeight());
         }

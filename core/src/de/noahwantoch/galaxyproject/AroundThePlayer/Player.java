@@ -28,6 +28,8 @@ public class Player {
     private static final float HEIGHT_OF_SPACESHIP = 0.2f; //In percentage
     private static final int INTRO_VELOCITY = 4;
 
+    private static final float PARTICLE_VELOCITY = 50f;
+
     private float skinWidth;
     private float skinHeight;
 
@@ -75,9 +77,9 @@ public class Player {
         rectangle.width = getSkin().getWidth() / 3;
         rectangle.height = getSkin().getHeight() * 2;
 
-        particleHandler = new ParticleHandler("particle.png", rectangle, ParticleDirection.DOWN);
+        particleHandler = new ParticleHandler("pre_particle.png", rectangle, ParticleDirection.DOWN);
         particleHandler.GenerateParticles(5);
-        particleHandler.setVelocity(80f);
+        particleHandler.setVelocity(PARTICLE_VELOCITY);
         particleHandler.setDirection(ParticleDirection.DOWN);
         particleHandler.setParticleSize(1.5f);
         particleHandler.setColor(0.8f, 0.5f, 0.2f);
